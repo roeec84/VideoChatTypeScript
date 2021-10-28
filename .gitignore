@@ -74,3 +74,6 @@ typings/
 
 # FuseBox cache
 .fusebox/
+
+#Server build
+server/build/

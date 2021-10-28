@@ -1,21 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import logo from './logo.svg';
+import { useState, useEffect } from 'react';
 import './App.css';
 import io from 'socket.io-client';
+import { useAppDispatch, useAppSelector } from './hooks/redux-hooks/redux-hooks';
+import { setUserSocketID } from './slices/user-slice';
 
 const socket = io(process.env.REACT_APP_SERVER_HOST as string);
 
 function App() {
-  const [clientID, setClientID] = useState()
+  const userSocketID = useAppSelector(state => state.user.socketId)
+  const dispatch = useAppDispatch()
+
   useEffect(() => {
     socket.on('me', (id) => {
-      setClientID(id)
+      dispatch(setUserSocketID({
+        socketId: id
+      }))
     })
   }, [])
 
   useEffect(() => {
-    console.log(clientID);
-  }, [clientID])
+    console.log(userSocketID);
+  }, [userSocketID])
 
   const socketClick = () => {
     console.log('Click');
@@ -29,23 +34,7 @@ function App() {
 
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo"/>
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <p>
-          <button onClick={socketClick}>Click</button>
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn Reacts
-        </a>
-      </header>
+      <p>{userSocketID}</p>
     </div>
   );
 }
